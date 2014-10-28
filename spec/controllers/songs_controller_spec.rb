@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe PagesController, "#index" do
+describe SongsController, "#index" do
   before do
     get :index
   end

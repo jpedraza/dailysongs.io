@@ -1,12 +1,14 @@
 ruby   "2.1.1"
 source "https://rubygems.org"
 
-gem "bourbon",  "4.0.2"
-gem "oj",       "2.10.3"
-gem "pg",       "0.17.1"
-gem "rails",    "4.1.6"
-gem "uglifier", "2.5.3"
-gem "unicorn",  "4.8.3"
+gem "bourbon",    "4.0.2"
+gem "ejs",        "1.1.1"
+gem "oj",         "2.10.3"
+gem "pg",         "0.17.1"
+gem "rails",      "4.1.6"
+gem "soundcloud", "0.3.2"
+gem "uglifier",   "2.5.3"
+gem "unicorn",    "4.8.3"
 
 group :production do
   gem "rails_12factor", "0.0.3"

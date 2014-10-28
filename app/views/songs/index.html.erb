@@ -1,0 +1,22 @@
+<section id="content">
+  <% @groups.each do |date, songs| %>
+    <section class="group">
+      <h1>
+        <%= date_to_weekday(date) %>
+
+        <time datetime="<%= date %>">
+          <%= date.to_s(:ordinalized) %>
+        </time>
+      </h1>
+
+      <ul>
+        <%= render songs %>
+      </ul>
+    </section>
+  <% end %>
+</section>
+
+<% content_for :javascript do %>
+<script src="https://connect.soundcloud.com/sdk.js"></script>
+<%= javascript_include_tag "application" %>
+<% end %>

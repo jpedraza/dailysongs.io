@@ -4,13 +4,36 @@
   <meta charset="utf-8">
   <%= csrf_meta_tags %>
 
-  <title>Radio</title>
+  <title>Daily Songs</title>
 
   <%= stylesheet_link_tag "application" %>
 </head>
 <body>
 
-<%= yield %>
+<section id="sidebar">
+  <header>
+    <a href="<%= root_path %>">
+      <h1>Daily Songs</h1>
+      <p>New songs every day.</p>
+    </a>
+  </header>
+
+  <section id="player">
+    <div class="tip">
+      <p>
+        <span>Tip</span> Use spacebar to toggle playback.
+      </p>
+    </div>
+  </section>
+</section>
+
+<%= yield -%>
+
+<footer>
+  <a href="https://soundcloud.com" target="_blank">
+    <%= image_tag "powered-by.png", height: 24 %>
+  </a>
+</footer>
 
 <%= yield :javascript -%>
 

@@ -1,5 +1,5 @@
 require "rails_helper"
 
-describe PagesController do
+describe SongsController do
   it { should route(:get, "/").to(action: :index) }
 end
