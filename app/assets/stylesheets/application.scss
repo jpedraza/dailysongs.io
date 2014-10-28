@@ -132,7 +132,8 @@ a {
     padding: 16px 0 0 0;
 
     .bar,
-    .time {
+    .position,
+    .remaining {
       float: left;
     }
 
@@ -154,14 +155,16 @@ a {
       }
     }
 
-    .time,
-    .loading {
+    .loading,
+    .position,
+    .remaining {
       font-size: 12px;
       text-align: center;
       display: block;
     }
 
-    .time {
+    .position,
+    .remaining {
       width: 40px;
       letter-spacing: 0.75px;
     }

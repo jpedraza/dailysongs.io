@@ -27,7 +27,7 @@ class Song < ActiveRecord::Base
   def update_from_remote(remote)
     self.data = remote.with_indifferent_access.tap do |data|
       data.slice!(*REMOTE_ATTRIBUTES)
-      data[:duration] /= 1000.0
+      data[:duration] = (data[:duration] / 1000.0).round
     end
   end
 end

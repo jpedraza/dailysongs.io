@@ -88,7 +88,7 @@ end
 describe Song, "#update_from_remote" do
   subject { build(:song) }
 
-  let(:remote) { build(:remote_song) }
+  let(:remote) { build(:remote_song, duration: 120_500) }
 
   it "assigns remote attributes to JSON data" do
     subject.update_from_remote(remote)
@@ -99,6 +99,6 @@ describe Song, "#update_from_remote" do
   it "converts the duration to seconds" do
     subject.update_from_remote(remote)
 
-    expect(subject.data["duration"]).to eq(remote["duration"] / 1000)
+    expect(subject.data["duration"]).to eq(121)
   end
 end

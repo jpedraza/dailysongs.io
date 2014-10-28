@@ -13,8 +13,10 @@ var Player = function() {
 };
 
 Player.prototype = {
-  element  : document.getElementById("player"),
-  template : JST["templates/player"],
+  template: JST["templates/player"],
+  elements: {
+    player: document.getElementById("player")
+  },
 
   bindEventListeners: function() {
     document.addEventListener("keypress", this.onKeyPress.bind(this), false);
@@ -61,11 +63,20 @@ Player.prototype = {
   },
 
   render: function() {
-    this.element.innerHTML = this.template({
+    var element = this.elements.player;
+
+    element.innerHTML = this.template({
       song     : this.data,
       loading  : this.loading,
       duration : this.formatTime(this.data.duration)
     });
+
+    this.elements = {
+      bar       : element.querySelector(".bar span"),
+      player    : element,
+      position  : element.querySelector(".position"),
+      remaining : element.querySelector(".remaining")
+    };
   },
 
   onFinish: function() {
@@ -92,12 +103,14 @@ Player.prototype = {
   },
 
   onProgress: function() {
-    var bar      = this.element.querySelector(".bar span"),
-        time     = this.time || this.element.querySelector(".time"),
-        position = Math.round(this.player.position / 1000);
+    var duration   = this.data.duration,
+        position   = Math.round(this.player.position / 1000),
+        remaining  = duration - position,
+        percentage = (position / duration) * 100;
 
-    bar.style.width = ((position / this.data.duration) * 100) + "%";
-    time.innerText = this.formatTime(position);
+    this.elements.bar.style.width = percentage + "%";
+    this.elements.position.innerText = this.formatTime(position);
+    this.elements.remaining.innerText = "-" + this.formatTime(remaining);
   }
 };
 
