@@ -45,6 +45,8 @@ Player.prototype = {
 
   play: function(data) {
     if (this.data && this.data.id == data.id) {
+      this.toggle();
+
       return;
     }
 
@@ -91,6 +93,18 @@ Player.prototype = {
     };
   },
 
+  toggle: function() {
+    var instance = this.instance;
+
+    if (!instance) {
+      return;
+    }
+
+    var paused = instance.togglePause().paused;
+
+    this.dispatch(paused ? "pause" : "play", this.data.id);
+  },
+
   onFinish: function() {
     this.playNext();
   },
@@ -98,15 +112,7 @@ Player.prototype = {
   onKeyPress: function(event) {
     switch (event.which) {
       case 32: // Space
-        var instance = this.instance;
-
-        if (instance) {
-          instance.togglePause();
-
-          this.dispatch(instance.paused ? "pause" : "play", this.data.id);
-        } else {
-          this.playNext();
-        }
+        this.toggle();
 
         event.preventDefault();
       break;
