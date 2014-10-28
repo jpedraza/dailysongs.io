@@ -210,14 +210,34 @@ a {
         border-bottom: 1px solid #EAECF2;
         font-size: 18px;
         font-weight: 600;
+        line-height: 24px;
         cursor: pointer;
 
-        &:hover {
+        &:hover,
+        &.active {
           background: lighten(#428BCA, 45%);
         }
 
         &:last-child {
           border: 0;
+        }
+
+        &.active {
+          .play,
+          .pause {
+            fill: #428BCA;
+          }
+        }
+
+        .play,
+        .pause {
+          width: 24px;
+          margin: 0 14px 0 0;
+          float: left;
+        }
+
+        .play {
+          fill: #999;
         }
       }
     }

@@ -22,6 +22,16 @@ Player.prototype = {
     document.addEventListener("keypress", this.onKeyPress.bind(this), false);
   },
 
+  dispatch: function(name, id) {
+    var event = new CustomEvent(name, {
+      detail: {
+        id: id
+      }
+    });
+
+    document.dispatchEvent(event);
+  },
+
   formatTime: function(seconds) {
     var minutes = Math.floor(seconds / 60),
         seconds = Math.round(seconds % 60);
@@ -39,6 +49,7 @@ Player.prototype = {
     }
 
     if (this.instance) {
+      this.dispatch("stop", this.data.id);
       this.instance.destruct();
       this.instance = null;
     }
@@ -46,6 +57,7 @@ Player.prototype = {
     this.data    = data;
     this.loading = true;
     this.render();
+    this.dispatch("play", data.id);
 
     SC.stream("/tracks/" + data.id, this.options, function(player) {
       this.instance = player.play();
@@ -86,8 +98,12 @@ Player.prototype = {
   onKeyPress: function(event) {
     switch (event.which) {
       case 32: // Space
-        if (this.instance) {
-          this.instance.togglePause();
+        var instance = this.instance;
+
+        if (instance) {
+          instance.togglePause();
+
+          this.dispatch(instance.paused ? "pause" : "play", this.data.id);
         } else {
           this.playNext();
         }
