@@ -38,9 +38,9 @@ Player.prototype = {
       return;
     }
 
-    if (this.player) {
-      this.player.destruct();
-      this.player = null;
+    if (this.instance) {
+      this.instance.destruct();
+      this.instance = null;
     }
 
     this.data    = data;
@@ -48,7 +48,7 @@ Player.prototype = {
     this.render();
 
     SC.stream("/tracks/" + data.id, this.options, function(player) {
-      this.player = player.play();
+      this.instance = player.play();
     }.bind(this));
   },
 
@@ -86,8 +86,8 @@ Player.prototype = {
   onKeyPress: function(event) {
     switch (event.which) {
       case 32: // Space
-        if (this.player) {
-          this.player.togglePause();
+        if (this.instance) {
+          this.instance.togglePause();
         } else {
           this.playNext();
         }
@@ -104,7 +104,7 @@ Player.prototype = {
 
   onProgress: function() {
     var duration   = this.data.duration,
-        position   = Math.round(this.player.position / 1000),
+        position   = Math.round(this.instance.position / 1000),
         remaining  = duration - position,
         percentage = (position / duration) * 100;
 
