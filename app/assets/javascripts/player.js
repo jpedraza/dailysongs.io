@@ -1,14 +1,6 @@
 //= require templates/player
 
 var Player = function() {
-  this.options = {
-    autoLoad     : true,
-    autoPlay     : false,
-    onload       : this.onLoad.bind(this),
-    onfinish     : this.onFinish.bind(this),
-    whileplaying : this.onProgress.bind(this)
-  };
-
   this.bindEventListeners();
 };
 
@@ -43,6 +35,17 @@ Player.prototype = {
     return [minutes, seconds].join(":");
   },
 
+  getOptions: function(data) {
+    return {
+      url          : "http://api.soundcloud.com/tracks/" + data.id + "/stream?client_id=" + this.client_id,
+      autoLoad     : true,
+      autoPlay     : false,
+      onload       : this.onLoad.bind(this),
+      onfinish     : this.onFinish.bind(this),
+      whileplaying : this.onProgress.bind(this)
+    };
+  },
+
   play: function(data) {
     if (this.data && this.data.id == data.id) {
       this.toggle();
@@ -60,10 +63,7 @@ Player.prototype = {
     this.loading = true;
     this.render();
     this.dispatch("play", data.id);
-
-    SC.stream("/tracks/" + data.id, this.options, function(player) {
-      this.instance = player.play();
-    }.bind(this));
+    this.instance = soundManager.createSound(this.getOptions(data)).play();
   },
 
   playNext: function() {
