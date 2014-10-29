@@ -1,6 +1,8 @@
 /*
  *= require reset
  *= require_self
+ *
+ *= depend_on_asset "powered-by.png"
  */
 
 @import "bourbon";
@@ -252,9 +254,12 @@ footer {
   padding: 32px 0;
 
   a {
+    background: url(<%= asset_data_uri("powered-by.png") %>) no-repeat;
+    background-size: 78px 24px;
     margin: 0 auto;
     width: 78px;
     height: 24px;
+    text-indent: -8192px;
     display: block;
     opacity: 0.33;
 
