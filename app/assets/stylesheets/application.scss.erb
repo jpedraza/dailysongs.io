@@ -14,9 +14,20 @@
 body {
   background: #FAFAFC;
   padding: 0 0 0 320px;
-  font: 16px/1 "Proxima Nova";
+  font: 16px/1 $helvetica;
   text-rendering: optimizeLegibility;
+  font-feature-settings: "kern";
+  font-kerning: normal;
   -webkit-font-smoothing: antialiased;
+  -webkit-font-feature-settings: "kern";
+  -moz-font-feature-settings: "kern";
+  -moz-font-feature-settings: "kern=1";
+}
+
+.wf-active {
+  body {
+    font-family: "proxima-nova", $helvetica;
+  }
 }
 
 a {
