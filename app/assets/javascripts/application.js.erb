@@ -1,11 +1,7 @@
-//= require soundmanager2.min
+//= require howler.min
 //
 //= require player
 //= require songs
-
-soundManager.setup({
-  preferFlash: false
-});
 
 Player.client_id = <%= ENV["SOUNDCLOUD_ID"].to_json %>;
 

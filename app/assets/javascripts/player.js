@@ -37,12 +37,12 @@ Player.prototype = {
 
   getOptions: function(data) {
     return {
-      url          : "http://api.soundcloud.com/tracks/" + data.id + "/stream?client_id=" + this.client_id,
-      autoLoad     : true,
-      autoPlay     : false,
-      onload       : this.onLoad.bind(this),
-      onfinish     : this.onFinish.bind(this),
-      whileplaying : this.onProgress.bind(this)
+      autoplay : true,
+      buffer   : true,
+      format   : "mp3",
+      onend    : this.onFinish.bind(this),
+      onload   : this.onLoad.bind(this),
+      urls     : ["http://api.soundcloud.com/tracks/" + data.id + "/stream?client_id=" + this.client_id]
     };
   },
 
@@ -54,8 +54,11 @@ Player.prototype = {
     }
 
     if (this.instance) {
+      clearInterval(this.interval);
+
       this.dispatch("stop", this.data.id);
-      this.instance.destruct();
+      this.instance.stop();
+      this.instance.unload();
       this.instance = null;
     }
 
@@ -63,7 +66,7 @@ Player.prototype = {
     this.loading = true;
     this.render();
     this.dispatch("play", data.id);
-    this.instance = soundManager.createSound(this.getOptions(data)).play();
+    this.instance = new Howl(this.getOptions(data)).play();
   },
 
   playNext: function() {
@@ -94,15 +97,10 @@ Player.prototype = {
   },
 
   toggle: function() {
-    var instance = this.instance;
+    var method = (this.paused = !this.paused) ? "pause" : "play";
 
-    if (!instance) {
-      return;
-    }
-
-    var paused = instance.togglePause().paused;
-
-    this.dispatch(paused ? "pause" : "play", this.data.id);
+    this.instance[method]();
+    this.dispatch(method, this.data.id);
   },
 
   onFinish: function() {
@@ -126,17 +124,19 @@ Player.prototype = {
   onLoad: function() {
     this.loading = false;
     this.render();
+    this.interval = setInterval(this.onProgress.bind(this), 500);
   },
 
   onProgress: function() {
-    var duration   = this.data.duration,
-        position   = Math.round(this.instance.position / 1000),
+    var elements   = this.elements,
+        duration   = this.data.duration,
+        position   = Math.round(this.instance.pos()),
         remaining  = duration - position,
         percentage = (position / duration) * 100;
 
-    this.elements.bar.style.width = percentage + "%";
-    this.elements.position.innerText = this.formatTime(position);
-    this.elements.remaining.innerText = "-" + this.formatTime(remaining);
+    elements.bar.style.width = percentage + "%";
+    elements.position.innerText = this.formatTime(position);
+    elements.remaining.innerText = "-" + this.formatTime(remaining);
   }
 };
 
