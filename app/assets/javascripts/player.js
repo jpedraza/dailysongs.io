@@ -112,7 +112,11 @@ Player.prototype = {
   onKeyPress: function(event) {
     switch (event.which) {
       case 32: // Space
-        this.toggle();
+        if (this.instance) {
+          this.toggle();
+        } else {
+          this.playNext();
+        }
 
         event.preventDefault();
       break;
