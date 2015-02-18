@@ -88,16 +88,19 @@
       background: darken($background, 2%);
       width: 206px;
       margin: $border-width 0;
+      padding: $border-width 0;
+      cursor: pointer;
 
       &,
       span {
-        height: 6px;
+        height: 8px;
         border-radius: $border-radius;
         display: block;
       }
 
       span {
         background: lighten($text-bright, 20%);
+        margin: -2px 0;
         width: 0;
       }
     }
