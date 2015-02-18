@@ -141,6 +141,19 @@ Player.prototype = {
 
         event.preventDefault();
       break;
+
+      case 77: // M
+        this.muted = !this.muted;
+
+        // Globally mute and unmute so it's consistent between songs.
+        Howler[this.muted ? "mute" : "unmute"]();
+
+        // Restore volume when unmuting as Howler will default to zero when
+        // creating a song while globally muted.
+        if (!this.muted) {
+          this.instance.volume(this.volume);
+        }
+      break;
     }
   },
 
