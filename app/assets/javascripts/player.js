@@ -139,6 +139,7 @@ Player.prototype = {
   },
 
   onLoad: function() {
+    this.paused  = false;
     this.loading = false;
     this.render();
     this.interval = setInterval(this.onProgress.bind(this), 500);
