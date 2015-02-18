@@ -13,6 +13,8 @@ Player.prototype = {
 
   bindEventListeners: function() {
     document.addEventListener("keydown", this.onKeyDown.bind(this), false);
+
+    this.elements.player.addEventListener("click", this.onSeek.bind(this), false);
   },
 
   dispatch: function(name, id) {
@@ -159,6 +161,17 @@ Player.prototype = {
     elements.bar.style.width = percentage + "%";
     elements.position.innerText = this.formatTime(position);
     elements.remaining.innerText = "-" + this.formatTime(remaining);
+  },
+
+  onSeek: function(event) {
+    if (!this.instance || !this.elements.bar) {
+      return;
+    }
+
+    var offset   = event.offsetX / this.elements.bar.parentNode.offsetWidth,
+        position = this.data.duration * offset;
+
+    this.instance.pos(position, this.id);
   }
 };
 
