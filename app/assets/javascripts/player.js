@@ -5,13 +5,14 @@ var Player = function() {
 };
 
 Player.prototype = {
-  template: JST["templates/player"],
-  elements: {
+  volume   : 1.0,
+  template : JST["templates/player"],
+  elements : {
     player: document.getElementById("player")
   },
 
   bindEventListeners: function() {
-    document.addEventListener("keypress", this.onKeyPress.bind(this), false);
+    document.addEventListener("keydown", this.onKeyDown.bind(this), false);
   },
 
   dispatch: function(name, id) {
@@ -66,7 +67,9 @@ Player.prototype = {
     this.loading = true;
     this.render();
     this.dispatch("play", data.id);
+
     this.instance = new Howl(this.getOptions(data)).play();
+    this.instance.volume(this.volume);
   },
 
   playNext: function() {
@@ -107,7 +110,7 @@ Player.prototype = {
     this.playNext();
   },
 
-  onKeyPress: function(event) {
+  onKeyDown: function(event) {
     switch (event.which) {
       case 32: // Space
         if (this.instance) {
@@ -115,6 +118,20 @@ Player.prototype = {
         } else {
           this.playNext();
         }
+
+        event.preventDefault();
+      break;
+
+      case 38: // Up
+        this.volume = Math.min(1.0, this.volume += 0.1);
+        this.instance.volume(this.volume);
+
+        event.preventDefault();
+      break;
+
+      case 40: // Down
+        this.volume = Math.max(0.1, this.volume -= 0.1);
+        this.instance.volume(this.volume);
 
         event.preventDefault();
       break;
