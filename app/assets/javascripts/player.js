@@ -190,6 +190,10 @@ Player.prototype = {
       return;
     }
 
+    if (event.srcElement != this.elements.bar && event.srcElement != this.elements.bar.parentNode) {
+      return;
+    }
+
     var offset   = event.offsetX / this.elements.bar.parentNode.offsetWidth,
         position = this.data.duration * offset;
 
