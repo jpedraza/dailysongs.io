@@ -15,6 +15,10 @@
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
+
+      .byline {
+        font-weight: 400;
+      }
     }
 
     p {

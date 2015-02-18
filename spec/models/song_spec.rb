@@ -69,6 +69,14 @@ describe Song, ".create_from_remote" do
   end
 end
 
+describe Song, "#artist" do
+  subject { build(:song) }
+
+  it "returns the artist in the data" do
+    expect(subject.artist).to eq(subject.data["artist"])
+  end
+end
+
 describe Song, "#created_on" do
   subject { create(:song) }
 
@@ -88,17 +96,24 @@ end
 describe Song, "#update_from_remote" do
   subject { build(:song) }
 
+  let(:local) { build(:local_song, duration: 121) }
   let(:remote) { build(:remote_song, duration: 120_500) }
 
   it "assigns remote attributes to JSON data" do
     subject.update_from_remote(remote)
 
-    expect(subject.data.keys).to eq(Song::REMOTE_ATTRIBUTES)
+    expect(subject.data.keys).to eq(Song::LOCAL_ATTRIBUTES)
+  end
+
+  it "attempts to separate artist and title" do
+    subject.update_from_remote(remote)
+
+    expect(subject.data).to eq(local)
   end
 
   it "converts the duration to seconds" do
     subject.update_from_remote(remote)
 
-    expect(subject.data["duration"]).to eq(121)
+    expect(subject.data["duration"]).to eq(local["duration"])
   end
 end

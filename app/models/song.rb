@@ -1,5 +1,6 @@
 class Song < ActiveRecord::Base
   REMOTE_ATTRIBUTES = %w(id title duration artwork_url permalink_url).freeze
+  LOCAL_ATTRIBUTES  = [REMOTE_ATTRIBUTES, "artist"].flatten.freeze
 
   validates_presence_of :data
 
@@ -16,6 +17,10 @@ class Song < ActiveRecord::Base
   rescue SoundCloud::ResponseError
   end
 
+  def artist
+    data["artist"]
+  end
+
   def created_on
     created_at.to_date
   end
@@ -26,7 +31,11 @@ class Song < ActiveRecord::Base
 
   def update_from_remote(remote)
     self.data = remote.with_indifferent_access.tap do |data|
+      artist, title = data[:title].split(" - ", 2)
+
       data.slice!(*REMOTE_ATTRIBUTES)
+      data[:title]    = title
+      data[:artist]   = artist
       data[:duration] = (data[:duration] / 1000.0).round
     end
   end
