@@ -117,9 +117,11 @@ Player.prototype = {
   },
 
   onKeyDown: function(event) {
+    var instance = this.instance;
+
     switch (event.which) {
       case 32: // Space
-        if (this.instance) {
+        if (instance) {
           this.toggle();
         } else {
           this.playNext();
@@ -129,20 +131,27 @@ Player.prototype = {
       break;
 
       case 38: // Up
-        this.volume = Math.min(1.0, this.volume += 0.1);
-        this.instance.volume(this.volume);
-
-        event.preventDefault();
-      break;
-
       case 40: // Down
-        this.volume = Math.max(0.1, this.volume -= 0.1);
-        this.instance.volume(this.volume);
+        if (!instance) {
+          break;
+        }
+
+        if (event.which == 38) {
+          this.volume = Math.min(1.0, this.volume += 0.1);
+        } else {
+          this.volume = Math.max(0.1, this.volume -= 0.1);
+        }
+
+        instance.volume(this.volume);
 
         event.preventDefault();
       break;
 
       case 77: // M
+        if (!instance || this.paused) {
+          break;
+        }
+
         this.muted = !this.muted;
 
         // Globally mute and unmute so it's consistent between songs.
@@ -151,7 +160,7 @@ Player.prototype = {
         // Restore volume when unmuting as Howler will default to zero when
         // creating a song while globally muted.
         if (!this.muted) {
-          this.instance.volume(this.volume);
+          instance.volume(this.volume);
         }
       break;
     }
