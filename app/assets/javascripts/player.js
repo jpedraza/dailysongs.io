@@ -43,7 +43,8 @@ Player.prototype = {
       format   : "mp3",
       onend    : this.onFinish.bind(this),
       onload   : this.onLoad.bind(this),
-      urls     : ["http://api.soundcloud.com/tracks/" + data.id + "/stream?client_id=" + this.client_id]
+      urls     : ["http://api.soundcloud.com/tracks/" + data.id + "/stream?client_id=" + this.client_id],
+      volume   : this.volume
     };
   },
 
@@ -58,8 +59,8 @@ Player.prototype = {
       clearInterval(this.interval);
 
       this.dispatch("stop", this.data.id);
-      this.instance.stop();
-      this.instance.unload();
+      this.instance.stop(this.id);
+      this.instance.unload(this.id);
       this.instance = null;
     }
 
@@ -68,8 +69,10 @@ Player.prototype = {
     this.render();
     this.dispatch("play", data.id);
 
-    this.instance = new Howl(this.getOptions(data)).play();
-    this.instance.volume(this.volume);
+    this.instance = new Howl(this.getOptions(data));
+    this.instance.play(function(id) {
+      this.id = id;
+    }.bind(this));
   },
 
   playNext: function() {
@@ -102,18 +105,12 @@ Player.prototype = {
   toggle: function() {
     var method = (this.paused = !this.paused) ? "pause" : "play";
 
-    this.instance[method]();
+    this.instance._clearEndTimer(this.id);
+    this.instance[method](this.id);
     this.dispatch(method, this.data.id);
   },
 
   onFinish: function() {
-    // The howler.js library uses a timeout to determine when finished and
-    // doesn't correctly remove it occasionally, so prevent playing the next
-    // song when paused.
-    if (this.paused) {
-      return;
-    }
-
     this.playNext();
   },
 
@@ -155,7 +152,7 @@ Player.prototype = {
   onProgress: function() {
     var elements   = this.elements,
         duration   = this.data.duration,
-        position   = Math.round(this.instance.pos()),
+        position   = Math.round(this.instance.pos(null, this.id)),
         remaining  = duration - position,
         percentage = (position / duration) * 100;
 
