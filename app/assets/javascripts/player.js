@@ -107,6 +107,13 @@ Player.prototype = {
   },
 
   onFinish: function() {
+    // The howler.js library uses a timeout to determine when finished and
+    // doesn't correctly remove it occasionally, so prevent playing the next
+    // song when paused.
+    if (this.paused) {
+      return;
+    }
+
     this.playNext();
   },
 
