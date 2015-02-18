@@ -61,8 +61,8 @@ Player.prototype = {
       clearInterval(this.interval);
 
       this.dispatch("stop", this.data.id);
-      this.instance.stop(this.id);
-      this.instance.unload(this.id);
+      this.instance.stop();
+      this.instance.unload();
       this.instance = null;
     }
 
@@ -108,7 +108,7 @@ Player.prototype = {
     var method = (this.paused = !this.paused) ? "pause" : "play";
 
     this.instance._clearEndTimer(this.id);
-    this.instance[method](this.id);
+    this.instance[method]();
     this.dispatch(method, this.data.id);
   },
 
@@ -167,7 +167,7 @@ Player.prototype = {
   onProgress: function() {
     var elements   = this.elements,
         duration   = this.data.duration,
-        position   = Math.round(this.instance.pos(null, this.id)),
+        position   = Math.round(this.instance.pos()),
         remaining  = duration - position,
         percentage = (position / duration) * 100;
 
@@ -184,7 +184,7 @@ Player.prototype = {
     var offset   = event.offsetX / this.elements.bar.parentNode.offsetWidth,
         position = this.data.duration * offset;
 
-    this.instance.pos(position, this.id);
+    this.instance.pos(position);
   }
 };
 
