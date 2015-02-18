@@ -1,4 +1,12 @@
 <% if (state) { %>
+  <% if (song.purchaseUrl) { %>
+    <div class="purchase">
+      <a href="<%= song.purchaseUrl %>" target="_blank" rel="nofollow">
+        Buy this <%= song.purchaseType %> on Amazon.
+      </a>
+    </div>
+  <% } %>
+
   <header>
     <img src="<%= song.artworkUrl %>" width="48" height="48" class="artwork" alt="Song artwork.">
 

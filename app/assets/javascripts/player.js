@@ -15,6 +15,7 @@ Player.prototype = {
     document.addEventListener("keydown", this.onKeyDown.bind(this), false);
 
     this.elements.player.addEventListener("click", this.onSeek.bind(this), false);
+    this.elements.player.addEventListener("click", this.onPurchase.bind(this), false);
   },
 
   dispatch: function(name, id) {
@@ -198,6 +199,18 @@ Player.prototype = {
     elements.bar.style.width = percentage + "%";
     elements.position.innerText = this.formatTime(position);
     elements.remaining.innerText = "-" + this.formatTime(remaining);
+  },
+
+  onPurchase: function(event) {
+    var target = event.srcElement;
+
+    if (target.nodeName != "A" || target.parentNode.className != "purchase") {
+      return;
+    }
+
+    if (window.ga) {
+      ga("send", "event", "buy", "click", this.data.purchaseType);
+    }
   },
 
   onSeek: function(event) {

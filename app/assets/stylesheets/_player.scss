@@ -42,6 +42,26 @@
     }
   }
 
+  .purchase {
+    @include position(absolute, -42px 0 null 0);
+
+    border-top: $border-width solid $border;
+
+    a {
+      background: $background;
+      color: $highlight;
+      padding: 12px 0;
+      font-size: 14px;
+      font-weight: 600;
+      text-align: center;
+      display: block;
+
+      &:hover {
+        background: lighten($highlight, 40%);
+      }
+    }
+  }
+
   .tip {
     @include position(relative, 50% null null 50%);
 
