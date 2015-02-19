@@ -1,16 +1,24 @@
-<header>
-  <img src="<%= song.artworkUrl %>" width="48" height="48" class="artwork" alt="Song artwork.">
+<% if (state) { %>
+  <header>
+    <img src="<%= song.artworkUrl %>" width="48" height="48" class="artwork" alt="Song artwork.">
 
-  <h1 title="<%= song.title %>"><%= song.title %> <span class="byline">by <%= song.artist %></span></h1>
-  <p><a href="<%= song.permalinkUrl %>" target="_blank" rel="nofollow">View on SoundCloud</a></p>
-</header>
+    <h1 title="<%= song.title %>"><%= song.title %> <span class="byline">by <%= song.artist %></span></h1>
+    <p><a href="<%= song.permalinkUrl %>" target="_blank" rel="nofollow">View on SoundCloud</a></p>
+  </header>
 
-<section>
-  <% if (loading) { %>
-    <span class="loading">Loading&#133;</span>
-  <% } else { %>
-    <span class="position">0:00</span>
-    <span class="bar"><span></span></span>
-    <span class="remaining">-<%= duration %></span>
-  <% } %>
-</section>
+  <section>
+    <% if (state == "playing") { %>
+      <span class="position">0:00</span>
+      <span class="bar"><span></span></span>
+      <span class="remaining">-<%= formatTime(song.duration) %></span>
+    <% } else { %>
+      <span class="loading">Loading&#133;</span>
+    <% } %>
+  </section>
+<% } else { %>
+  <div class="tip">
+    <p>
+      <span>Tip</span> <%= Player.tips[Math.floor(Math.random() * Player.tips.length)] %>
+    </p>
+  </div>
+<% } %>

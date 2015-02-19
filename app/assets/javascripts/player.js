@@ -57,17 +57,9 @@ Player.prototype = {
       return;
     }
 
-    if (this.instance) {
-      clearInterval(this.interval);
-
-      this.dispatch("stop", this.data.id);
-      this.instance.stop();
-      this.instance.unload();
-      this.instance = null;
-    }
-
-    this.data    = data;
-    this.loading = true;
+    this.stop();
+    this.data  = data;
+    this.state = "loading";
     this.render();
     this.dispatch("play", data.id);
 
@@ -84,16 +76,24 @@ Player.prototype = {
 
     if (next) {
       this.play(next.dataset);
+    } else {
+      this.state = null;
+      this.stop();
+      this.render();
     }
   },
 
   render: function() {
     var element = this.elements.player;
 
+    // Force the browser to notice the content changing to fix an issue with a
+    // tip replacing the player before rendering.
+    element.innerHTML = "";
+    element.offsetHeight;
     element.innerHTML = this.template({
-      song     : this.data,
-      loading  : this.loading,
-      duration : this.formatTime(this.data.duration)
+      song       : this.data,
+      state      : this.state,
+      formatTime : this.formatTime
     });
 
     this.elements = {
@@ -102,6 +102,21 @@ Player.prototype = {
       position  : element.querySelector(".position"),
       remaining : element.querySelector(".remaining")
     };
+  },
+
+  stop: function() {
+    clearInterval(this.interval);
+
+    if (this.data) {
+      this.dispatch("stop", this.data.id);
+      this.data = null;
+    }
+
+    if (this.instance) {
+      this.instance.stop();
+      this.instance.unload();
+      this.instance = null;
+    }
   },
 
   toggle: function() {
@@ -167,8 +182,8 @@ Player.prototype = {
   },
 
   onLoad: function() {
-    this.paused  = false;
-    this.loading = false;
+    this.state  = "playing";
+    this.paused = false;
     this.render();
     this.interval = setInterval(this.onProgress.bind(this), 500);
   },

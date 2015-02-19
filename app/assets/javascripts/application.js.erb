@@ -3,6 +3,7 @@
 //= require player
 //= require songs
 
+Player.tips      = <%= ApplicationHelper::TIPS.to_json %>;
 Player.client_id = <%= ENV["SOUNDCLOUD_ID"].to_json %>;
 
 Songs.initialize();
