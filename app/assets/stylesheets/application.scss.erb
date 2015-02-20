@@ -49,9 +49,31 @@ a {
     text-align: center;
 
     a {
-      padding: $padding 0;
       border-bottom: $border-width solid $border;
       display: block;
+
+      &.logo {
+        padding: $padding 0;
+      }
+
+      &.follow {
+        color: $text;
+        padding: 12px 0;
+        font-size: 14px;
+        display: block;
+
+        &:hover {
+          background: lighten($text-bright, 45%);
+
+          span {
+            color: $text-bright;
+          }
+        }
+
+        span {
+          font-weight: 700;
+        }
+      }
     }
 
     h1 {
