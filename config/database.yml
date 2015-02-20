@@ -6,11 +6,11 @@ default: &default
 
 development:
   <<: *default
-  database: radio_development
+  database: daily_songs_development
 
 test:
   <<: *default
-  database: radio_test
+  database: daily_songs_test
 
 production:
   <<: *default
