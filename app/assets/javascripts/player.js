@@ -201,15 +201,14 @@ Player.prototype = {
   },
 
   onSeek: function(event) {
-    if (!this.instance || !this.elements.bar) {
+    var bar    = this.elements.bar,
+        target = event.srcElement;
+
+    if (!this.instance || !bar || target != bar && target != bar.parentNode) {
       return;
     }
 
-    if (event.srcElement != this.elements.bar && event.srcElement != this.elements.bar.parentNode) {
-      return;
-    }
-
-    var offset   = event.offsetX / this.elements.bar.parentNode.offsetWidth,
+    var offset   = event.offsetX / bar.parentNode.offsetWidth,
         position = this.data.duration * offset;
 
     this.instance.pos(position);
