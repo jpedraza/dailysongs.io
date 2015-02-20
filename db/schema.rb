@@ -11,15 +11,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141021000947) do
+ActiveRecord::Schema.define(version: 20150220014314) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "songs", force: true do |t|
-    t.json     "data",       null: false
+  create_table "songs", force: :cascade do |t|
+    t.json     "data",         null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "published_at"
   end
+
+  add_index "songs", ["published_at"], name: "index_songs_on_published_at", using: :btree
 
 end

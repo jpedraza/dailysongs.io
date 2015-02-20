@@ -2,6 +2,8 @@ class Song < ActiveRecord::Base
   REMOTE_ATTRIBUTES = %w(id title duration artwork_url permalink_url).freeze
   LOCAL_ATTRIBUTES  = [REMOTE_ATTRIBUTES, "artist"].flatten.freeze
 
+  scope :published, -> { where("published_at IS NOT NULL").order("published_at DESC") }
+
   validates_presence_of :data
 
   def self.create_from_remote(id)
@@ -21,8 +23,8 @@ class Song < ActiveRecord::Base
     data["artist"]
   end
 
-  def created_on
-    created_at.to_date
+  def published_on
+    published_at.to_date
   end
 
   def title

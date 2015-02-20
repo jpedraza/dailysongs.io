@@ -1,6 +1,10 @@
 FactoryGirl.define do
   factory :song do
     data { build(:local_song) }
+
+    trait :published do
+      published_at { Time.now }
+    end
   end
 
   factory :local_song, class: ActiveSupport::HashWithIndifferentAccess do

@@ -1,5 +1,5 @@
 class SongsController < ApplicationController
   def index
-    @groups = Song.all.group_by(&:created_on)
+    @groups = Song.published.group_by(&:published_on)
   end
 end

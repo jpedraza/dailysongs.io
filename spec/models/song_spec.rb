@@ -69,6 +69,21 @@ describe Song, ".create_from_remote" do
   end
 end
 
+describe Song, ".published" do
+  subject { Song }
+
+  let!(:published_song)   { create(:song, :published) }
+  let!(:unpublished_song) { create(:song) }
+
+  it "includes published songs" do
+    expect(subject.published).to include(published_song)
+  end
+
+  it "excludes unpublished songs" do
+    expect(subject.published).to_not include(unpublished_song)
+  end
+end
+
 describe Song, "#artist" do
   subject { build(:song) }
 
@@ -77,11 +92,11 @@ describe Song, "#artist" do
   end
 end
 
-describe Song, "#created_on" do
-  subject { create(:song) }
+describe Song, "#published_on" do
+  subject { create(:song, :published) }
 
   it "returns creation time as a date" do
-    expect(subject.created_on).to eq(subject.created_at.to_date)
+    expect(subject.published_on).to eq(subject.published_at.to_date)
   end
 end
 
