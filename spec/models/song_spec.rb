@@ -117,7 +117,9 @@ describe Song, "#update_from_remote" do
   it "assigns remote attributes to JSON data" do
     subject.update_from_remote(remote)
 
-    expect(subject.data.keys).to eq(Song::LOCAL_ATTRIBUTES)
+    subject.data.keys.each do |key|
+      expect(key).to be_in(Song::LOCAL_ATTRIBUTES)
+    end
   end
 
   it "attempts to separate artist and title" do

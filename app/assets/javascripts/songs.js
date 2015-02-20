@@ -16,7 +16,7 @@ var Songs = {
   },
 
   setState: function(id, state, active) {
-    var element = document.querySelector("[data-id='" + id + "']"),
+    var element = document.querySelector("[data-remote-id='" + id + "']"),
         path    = element.querySelector("path");
 
     path.setAttribute("d", this.paths[state]);
@@ -25,7 +25,7 @@ var Songs = {
 
   onClick: function(event) {
     var target = event.target;
-        id     = target && target.getAttribute("data-id");
+        id     = target && target.getAttribute("data-remote-id");
 
     if (!id) {
       return;

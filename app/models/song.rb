@@ -1,6 +1,9 @@
 class Song < ActiveRecord::Base
   REMOTE_ATTRIBUTES = %w(id title duration artwork_url permalink_url).freeze
-  LOCAL_ATTRIBUTES  = [REMOTE_ATTRIBUTES, "artist"].flatten.freeze
+  LOCAL_ATTRIBUTES  = %w(
+    remote_id artist title duration artwork_url permalink_url
+    purchase_type purchase_url
+  ).freeze
 
   scope :published, -> { where("published_at IS NOT NULL").order("published_at DESC") }
 
@@ -36,9 +39,10 @@ class Song < ActiveRecord::Base
       artist, title = data[:title].split(" - ", 2)
 
       data.slice!(*REMOTE_ATTRIBUTES)
-      data[:title]    = title
-      data[:artist]   = artist
-      data[:duration] = (data[:duration] / 1000.0).round
+      data[:title]     = title
+      data[:artist]    = artist
+      data[:duration]  = (data[:duration] / 1000.0).round
+      data[:remote_id] = data.delete(:id)
     end
   end
 end

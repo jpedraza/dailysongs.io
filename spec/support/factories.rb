@@ -8,7 +8,7 @@ FactoryGirl.define do
   end
 
   factory :local_song, class: ActiveSupport::HashWithIndifferentAccess do
-    id 172471838
+    remote_id 172471838
     title "Some Chords (Dillon Francis Remix)"
     artist "deadmau5"
     duration 120

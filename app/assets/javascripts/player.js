@@ -46,13 +46,13 @@ Player.prototype = {
       format   : "mp3",
       onend    : this.onFinish.bind(this),
       onload   : this.onLoad.bind(this),
-      urls     : ["http://api.soundcloud.com/tracks/" + data.id + "/stream?client_id=" + this.client_id],
+      urls     : ["http://api.soundcloud.com/tracks/" + data.remoteId + "/stream?client_id=" + this.client_id],
       volume   : this.volume
     };
   },
 
   play: function(data) {
-    if (this.data && this.data.id == data.id) {
+    if (this.data && this.data.remoteId == data.remoteId) {
       this.toggle();
 
       return;
@@ -62,7 +62,7 @@ Player.prototype = {
     this.data  = data;
     this.state = "loading";
     this.render();
-    this.dispatch("play", data.id);
+    this.dispatch("play", data.remoteId);
 
     this.instance = new Howl(this.getOptions(data));
     this.instance.play(function(id) {
@@ -71,8 +71,8 @@ Player.prototype = {
   },
 
   playNext: function() {
-    var all     = Array.prototype.slice.call(document.querySelectorAll("[data-id]")),
-        current = document.querySelector("[data-id='" + (this.data ? this.data.id : 0) + "']"),
+    var all     = Array.prototype.slice.call(document.querySelectorAll("[data-remote-id]")),
+        current = document.querySelector("[data-remote-id='" + (this.data ? this.data.remoteId : 0) + "']"),
         next    = all[all.indexOf(current) + 1];
 
     if (next) {
@@ -109,7 +109,7 @@ Player.prototype = {
     clearInterval(this.interval);
 
     if (this.data) {
-      this.dispatch("stop", this.data.id);
+      this.dispatch("stop", this.data.remoteId);
       this.data = null;
     }
 
@@ -125,7 +125,7 @@ Player.prototype = {
 
     this.instance._clearEndTimer(this.id);
     this.instance[method]();
-    this.dispatch(method, this.data.id);
+    this.dispatch(method, this.data.remoteId);
   },
 
   onFinish: function() {
