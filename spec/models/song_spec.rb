@@ -2,6 +2,23 @@ require "rails_helper"
 
 describe Song do
   it { should validate_presence_of(:data) }
+
+  it { should validate_presence_of(:remote_id) }
+  it { should validate_numericality_of(:remote_id).only_integer }
+
+  it { should validate_presence_of(:artist) }
+
+  it { should validate_presence_of(:title) }
+
+  it { should validate_presence_of(:duration) }
+  it { should validate_numericality_of(:duration).only_integer }
+
+  it { should validate_presence_of(:artwork_url) }
+
+  it { should validate_presence_of(:permalink_url) }
+
+  it { should validate_inclusion_of(:purchase_type).
+                in_array(Song::PURCHASE_TYPES).allow_nil }
 end
 
 describe Song, ".create_from_remote" do
@@ -84,27 +101,11 @@ describe Song, ".published" do
   end
 end
 
-describe Song, "#artist" do
-  subject { build(:song) }
-
-  it "returns the artist in the data" do
-    expect(subject.artist).to eq(subject.data["artist"])
-  end
-end
-
 describe Song, "#published_on" do
   subject { create(:song, :published) }
 
   it "returns creation time as a date" do
     expect(subject.published_on).to eq(subject.published_at.to_date)
-  end
-end
-
-describe Song, "#title" do
-  subject { build(:song) }
-
-  it "returns the title in the data" do
-    expect(subject.title).to eq(subject.data["title"])
   end
 end
 
@@ -132,5 +133,29 @@ describe Song, "#update_from_remote" do
     subject.update_from_remote(remote)
 
     expect(subject.data["duration"]).to eq(local["duration"])
+  end
+end
+
+Song::LOCAL_ATTRIBUTES.each do |attribute|
+  describe Song, "##{attribute}" do
+    subject { build(:song) }
+
+    it "returns the #{attribute} in the data" do
+      result = subject.public_send(attribute)
+
+      expect(result).to eq(subject.data[attribute])
+    end
+  end
+
+  describe Song, "##{attribute}=" do
+    subject { Song.new }
+
+    let(:value) { build(:song).public_send(attribute) }
+
+    it "updates the #{attribute} in the data" do
+      subject.public_send("#{attribute}=", value)
+
+      expect(subject.data[attribute]).to eq(value)
+    end
   end
 end
