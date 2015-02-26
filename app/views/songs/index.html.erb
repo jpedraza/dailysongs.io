@@ -17,5 +17,17 @@
 </section>
 
 <% content_for :javascript do %>
-<%= javascript_include_tag "application" %>
+  <%= javascript_include_tag "application" %>
+
+  <% if @song.present? %>
+    <script>
+      (function() {
+        var element = document.querySelector("[data-remote-id='<%== @song.remote_id %>']");
+
+        if (element) {
+          Player.play(element.dataset);
+        }
+      })();
+    </script>
+  <% end %>
 <% end %>

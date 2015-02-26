@@ -8,8 +8,9 @@ class Song < ActiveRecord::Base
 
   store_accessor :data, *LOCAL_ATTRIBUTES
 
-  scope :published,   -> { where("published_on IS NOT NULL").desc(:published_on) }
-  scope :unpublished, -> { where("published_on IS NULL").asc(:id) }
+  scope :published,        -> { where("published_on IS NOT NULL").desc(:published_on) }
+  scope :unpublished,      -> { where("published_on IS NULL").asc(:id) }
+  scope :published_before, -> (date) { where("published_on <= ?", date) }
 
   validates :data,          presence: true
   validates :remote_id,     presence: true, numericality: { only_integer: true }
@@ -38,6 +39,16 @@ class Song < ActiveRecord::Base
     transaction do
       Song.where(id: ids).each(&:publish!)
     end
+  end
+
+  def artwork_url(style = nil)
+    url = data["artwork_url"]
+
+    if style.present?
+      url.sub!(%r{-large.jpg\Z}, "-#{style}.jpg")
+    end
+
+    url
   end
 
   def publish!

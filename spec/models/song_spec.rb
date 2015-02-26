@@ -131,6 +131,20 @@ describe Song, ".published" do
   end
 end
 
+describe Song, ".published_before" do
+  subject { Song }
+
+  let!(:song_1) { create(:song, published_on: Date.today) }
+  let!(:song_2) { create(:song, published_on: Date.today - 1.day) }
+  let!(:song_3) { create(:song, published_on: Date.today - 2.days) }
+
+  it "only includes songs published on or before the provided date" do
+    expect(subject.published_before(song_2.published_on)).to eq([
+      song_2, song_3
+    ])
+  end
+end
+
 describe Song, ".unpublished" do
   subject { Song }
 
@@ -143,6 +157,21 @@ describe Song, ".unpublished" do
 
   it "excludes published songs" do
     expect(subject.unpublished).to_not include(published_song)
+  end
+end
+
+describe Song, "#artwork_url" do
+  subject { build(:song, data: { artwork_url: url }) }
+
+  let(:url)      { "https://i1.sndcdn.com/artworks-000093571575-bx17w9-large.jpg" }
+  let(:crop_url) { "https://i1.sndcdn.com/artworks-000093571575-bx17w9-crop.jpg" }
+
+  it "returns the data value by default" do
+    expect(subject.artwork_url).to eq(url)
+  end
+
+  it "supports custom styles" do
+    expect(subject.artwork_url(:crop)).to eq(crop_url)
   end
 end
 

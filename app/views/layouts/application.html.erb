@@ -4,11 +4,21 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="New songs every day.">
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:site" content="@dailysongsio">
-  <meta name="twitter:title" content="Daily Songs">
-  <meta name="twitter:description" content="New songs every day.">
-  <meta name="twitter:url" content="http://dailysongs.io">
+
+  <% if @song.present? %>
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@dailysongsio">
+    <meta name="twitter:title" content="<%= @song.title %> by <%= @song.artist %>">
+    <meta name="twitter:description" content="Listen to <%= @song.title %> and discover new songs every day.">
+    <meta name="twitter:url" content="<%= song_url(@song) %>">
+    <meta name="twitter:image" content="<%= @song.artwork_url(:crop) %>">
+  <% else %>
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@dailysongsio">
+    <meta name="twitter:title" content="Daily Songs">
+    <meta name="twitter:description" content="New songs every day.">
+    <meta name="twitter:url" content="http://dailysongs.io">
+  <% end %>
 
   <title>Daily Songs</title>
 

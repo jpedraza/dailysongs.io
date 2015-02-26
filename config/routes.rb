@@ -9,5 +9,7 @@ Rails.application.routes.draw do
     root to: "manage/songs#index", as: "manage_root"
   end
 
+  resources :songs, only: [:show]
+
   root to: "songs#index"
 end
