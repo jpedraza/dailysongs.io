@@ -1,8 +1,8 @@
 //= require howler.min
 //= require detector
 //
-//= require player
-//= require songs
+//= require application/player
+//= require application/songs
 
 Player.tips      = <%= ApplicationHelper::TIPS.to_json %>;
 Player.client_id = <%= ENV["SOUNDCLOUD_ID"].to_json %>;
