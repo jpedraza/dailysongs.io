@@ -12,10 +12,6 @@ describe SongsController, "#index" do
   it { should render_template(:index) }
 
   it "only assigns published songs" do
-    groups = assigns(:groups)
-    songs  = groups[Date.today]
-
-    expect(songs.length).to eq(1)
-    expect(groups.length).to eq(1)
+    expect(assigns(:groups)).to eq({ Date.today => [published_song] })
   end
 end
