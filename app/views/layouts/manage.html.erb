@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <meta charset="utf-8">
+
+  <title>Daily Songs</title>
+
+  <%= stylesheet_link_tag "application", "manage" %>
+</head>
+<body>
+
+<section id="sidebar">
+  <header>
+    <a href="<%= root_url(subdomain: nil) %>" class="logo">
+      <h1>Daily Songs</h1>
+      <p>New songs every day.</p>
+    </a>
+  </header>
+</section>
+
+<%= yield -%>
+
+<%= yield :javascript -%>
+
+</body>
+</html>

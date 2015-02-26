@@ -1,0 +1,25 @@
+<section id="content">
+  <h1><%= @song ? "Add" : "Retrieve" %> a Song</h1>
+
+  <%= form_for @song || Song.new, url: @song ? songs_path : new_song_path, method: @song ? :post : :get do |form| %>
+    <table>
+      <% if @song.nil? %>
+        <tr>
+          <th><%= label_tag :id, "Remote ID"  %></th>
+          <td><%= text_field_tag :id %></td>
+        </tr>
+        <tr>
+          <th></th>
+          <td><button type="submit">Retrieve</button></td>
+        </tr>
+      <% else %>
+        <%= render "fields", form:form, song: @song %>
+
+        <tr>
+          <th></th>
+          <td><button type="submit">Add</button></td>
+        </tr>
+      <% end %>
+    </table>
+  <% end %>
+</section>

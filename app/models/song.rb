@@ -6,7 +6,8 @@ class Song < ActiveRecord::Base
     purchase_type purchase_url
   ).freeze
 
-  scope :published, -> { where("published_at IS NOT NULL").order("published_at DESC") }
+  scope :published,   -> { where("published_at IS NOT NULL").order("published_at DESC") }
+  scope :unpublished, -> { where("published_at IS NULL").order("id ASC") }
 
   validates :data,          presence: true
   validates :remote_id,     presence: true, numericality: { only_integer: true }
@@ -15,9 +16,11 @@ class Song < ActiveRecord::Base
   validates :duration,      presence: true, numericality: { only_integer: true }
   validates :artwork_url,   presence: true
   validates :permalink_url, presence: true
-  validates :purchase_type, inclusion: { in: PURCHASE_TYPES, allow_nil: true }
+  validates :purchase_type, inclusion: { in: PURCHASE_TYPES }, allow_blank: true
 
-  def self.create_from_remote(id)
+  def self.build_from_remote(id)
+    return if id.blank?
+
     client = SoundCloud.new(client_id: ENV["SOUNDCLOUD_ID"])
     remote = client.get("/tracks/#{id}")
 
@@ -25,9 +28,14 @@ class Song < ActiveRecord::Base
 
     Song.new.tap do |song|
       song.update_from_remote(remote)
-      song.save
     end
   rescue SoundCloud::ResponseError
+  end
+
+  def self.publish!(*ids)
+    transaction do
+      Song.where(id: ids).each(&:publish!)
+    end
   end
 
   LOCAL_ATTRIBUTES.each do |attribute|
@@ -40,6 +48,10 @@ class Song < ActiveRecord::Base
       self.data ||= {}
       self.data[attribute] = value
     end
+  end
+
+  def publish!
+    update!(published_at: Time.now)
   end
 
   def published_on

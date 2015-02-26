@@ -1,0 +1,42 @@
+<section id="content">
+  <ul id="menu">
+    <li><%= link_to "Add a Song", new_song_path, class: "add" %></li>
+    <li><%= link_to "Publish Songs", "/", class: "publish" %></li>
+  </ul>
+
+  <% if @unpublished.any? %>
+    <section class="group">
+      <h1>Unpublished</h1>
+
+      <%= form_for :songs, url: publish_songs_path, method: :put do %>
+        <ul>
+          <%= render @unpublished %>
+        </ul>
+      <% end %>
+    </section>
+  <% end %>
+
+  <% @groups.each do |group, songs| %>
+    <section class="group">
+      <h1>
+        <%= date_to_weekday(group) %>
+
+        <time datetime="<%= group %>">
+          <%= group.to_s(:ordinalized) %>
+        </time>
+      </h1>
+
+      <ul>
+        <% if songs.any? %>
+          <%= render songs %>
+        <% else %>
+          <li class="empty">No songs.</li>
+        <% end %>
+      </ul>
+    </section>
+  <% end %>
+</section>
+
+<% content_for :javascript do %>
+  <%= javascript_include_tag "manage" %>
+<% end %>

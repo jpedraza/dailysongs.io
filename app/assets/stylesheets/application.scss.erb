@@ -14,8 +14,13 @@
 }
 
 body {
-  background: $background;
   padding: 0 0 0 $sidebar-width;
+}
+
+body,
+input,
+button {
+  background: $background;
   font: 16px/1 "Proxima Nova", $helvetica;
   text-rendering: optimizeLegibility;
   font-feature-settings: "kern";
@@ -27,7 +32,9 @@ body {
 }
 
 .wf-active {
-  body {
+  body,
+  input,
+  button {
     font-family: "proxima-nova", $helvetica;
   }
 }

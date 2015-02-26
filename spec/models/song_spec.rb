@@ -18,10 +18,10 @@ describe Song do
   it { should validate_presence_of(:permalink_url) }
 
   it { should validate_inclusion_of(:purchase_type).
-                in_array(Song::PURCHASE_TYPES).allow_nil }
+                in_array(Song::PURCHASE_TYPES).allow_blank }
 end
 
-describe Song, ".create_from_remote" do
+describe Song, ".build_from_remote" do
   subject { Song }
 
   let(:id)     { 172471838 }
@@ -31,7 +31,6 @@ describe Song, ".create_from_remote" do
   let(:remote) { double("remote") }
 
   before do
-    allow(song).to receive(:save)
     allow(song).to receive(:update_from_remote)
     allow(Song).to receive(:new).and_return(song)
     allow(client).to receive(:get).and_return(remote)
@@ -40,13 +39,13 @@ describe Song, ".create_from_remote" do
   end
 
   it "creates a SoundCloud client" do
-    subject.create_from_remote(id)
+    subject.build_from_remote(id)
 
     expect(SoundCloud).to have_received(:new).with(client_id: ENV["SOUNDCLOUD_ID"])
   end
 
   it "retrieves the remote song" do
-    subject.create_from_remote(id)
+    subject.build_from_remote(id)
 
     expect(client).to have_received(:get).with("/tracks/#{id}")
   end
@@ -55,34 +54,71 @@ describe Song, ".create_from_remote" do
     allow(client).to receive(:get).and_raise(error)
 
     expect {
-      subject.create_from_remote(id)
+      subject.build_from_remote(id)
     }.to_not raise_error
   end
 
   it "initializes a new song" do
-    subject.create_from_remote(id)
+    subject.build_from_remote(id)
 
     expect(Song).to have_received(:new)
+  end
+
+  it "updates the song from the remote" do
+    subject.build_from_remote(id)
+
+    expect(song).to have_received(:update_from_remote).with(remote)
   end
 
   it "does not initialize a new song when remote is not streamable" do
     allow(remote).to receive(:streamable).and_return(false)
 
-    subject.create_from_remote(id)
+    result = subject.build_from_remote(id)
 
     expect(Song).to_not have_received(:new)
+    expect(result).to be_nil
   end
 
-  it "updates the song from the remote" do
-    subject.create_from_remote(id)
+  it "does not initialize a new song when ID is nil" do
+    result = subject.build_from_remote(nil)
 
-    expect(song).to have_received(:update_from_remote).with(remote)
+    expect(Song).to_not have_received(:new)
+    expect(result).to be_nil
+  end
+end
+
+describe Song, ".publish!" do
+  subject { Song }
+
+  let!(:song_1)       { create(:song) }
+  let!(:song_2)       { create(:song) }
+  let!(:invalid_song) { create(:song) }
+
+  before do
+    invalid_song.title = ""
+    invalid_song.save(validate: false)
   end
 
-  it "saves the song" do
-    subject.create_from_remote(id)
+  it "publishes the songs" do
+    subject.publish!(song_1.id, song_2.id)
 
-    expect(song).to have_received(:save)
+    expect(song_1.reload.published_at).to_not be_nil
+    expect(song_2.reload.published_at).to_not be_nil
+  end
+
+  it "publishes the songs in a transaction" do
+    expect {
+      subject.publish!(song_1.id, invalid_song.id)
+    }.to raise_error(ActiveRecord::RecordInvalid)
+
+    expect(song_1.reload.published_at).to be_nil
+    expect(invalid_song.reload.published_at).to be_nil
+  end
+
+  it "does not publish songs as the exact same time" do
+    subject.publish!(song_1.id, song_2.id)
+
+    expect(song_1.reload.published_at).to_not eq(song_2.reload.published_at)
   end
 end
 
@@ -98,6 +134,39 @@ describe Song, ".published" do
 
   it "excludes unpublished songs" do
     expect(subject.published).to_not include(unpublished_song)
+  end
+end
+
+describe Song, ".unpublished" do
+  subject { Song }
+
+  let!(:published_song)   { create(:song, :published) }
+  let!(:unpublished_song) { create(:song) }
+
+  it "includes unpublished songs" do
+    expect(subject.unpublished).to include(unpublished_song)
+  end
+
+  it "excludes published songs" do
+    expect(subject.unpublished).to_not include(published_song)
+  end
+end
+
+describe Song, "#publish!" do
+  subject { create(:song) }
+
+  it "publishes the song" do
+    subject.publish!
+
+    expect(subject.reload.published_at).to_not be_nil
+  end
+
+  it "raises if record is invalid" do
+    subject.title = nil
+
+    expect {
+      subject.publish!
+    }.to raise_error(ActiveRecord::RecordInvalid)
   end
 end
 

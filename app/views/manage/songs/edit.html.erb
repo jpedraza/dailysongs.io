@@ -1,0 +1,14 @@
+<section id="content">
+  <h1>Edit a Song</h1>
+
+  <%= form_for @song do |form| %>
+    <table>
+      <%= render "fields", form:form, song: @song %>
+
+      <tr>
+        <th></th>
+        <td><button type="submit">Save</button></td>
+      </td>
+    </table>
+  <% end %>
+</section>

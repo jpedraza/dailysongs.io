@@ -1,0 +1,124 @@
+@import "bourbon";
+@import "variables";
+
+body {
+  padding: 0;
+}
+
+#sidebar {
+  @include position(static, 0 null 0 0);
+
+  width: auto;
+  padding: 0;
+}
+
+#menu {
+  @include clearfix;
+
+  background: $foreground;
+  margin: $padding;
+  border: $border-width solid $border;
+
+  li {
+    display: inline;
+
+    .publish {
+      color: $text-dull;
+      float: right;
+
+      &.enabled {
+        color: $text-bright;
+      }
+    }
+
+    a {
+      color: $text-bright;
+      padding: $padding;
+      font-weight: 700;
+      display: block;
+      float: left;
+
+      &:hover {
+        color: darken($text-bright, 20%);
+      }
+    }
+  }
+}
+
+#content {
+  margin: 0 auto;
+
+  > h1 {
+    color: $text;
+    padding: $padding;
+    font-size: 22px;
+    font-weight: 700;
+  }
+
+  .group {
+    ul {
+      li {
+        padding: 0;
+
+        a,
+        &.empty {
+          color: darken($text, 25%);
+          padding: $padding;
+          display: block;
+        }
+
+        input {
+          margin: 0 8px 0 0;
+        }
+      }
+    }
+  }
+
+  form {
+    table {
+      width: 100%;
+
+      th,
+      td {
+        padding: $padding / 2;
+      }
+
+      th {
+        width: 15%;
+        font-weight: 600;
+        text-align: right;
+      }
+
+      input,
+      button {
+        border-radius: $border-radius;
+      }
+
+      input {
+        background: $foreground;
+        width: 100%;
+        padding: $padding / 1.5;
+        border: $border-width solid $border;
+        outline: none;
+
+        &:focus {
+          border-color: lighten($text-bright, 25%);
+        }
+      }
+
+      button {
+        background: $text-bright;
+        color: $foreground;
+        padding: $padding / 1.5 $padding * 2;
+        border: $border-width solid darken($text-bright, 10%);
+        font-weight: 600;
+        cursor: pointer;
+
+        &:hover {
+          background: darken($text-bright, 10%);
+          border-color: darken($text-bright, 20%);
+        }
+      }
+    }
+  }
+}
