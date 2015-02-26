@@ -127,6 +127,6 @@ describe Manage::SongsController, "#publish" do
   it { should redirect_to(manage_root_path) }
 
   it "publishes the songs" do
-    expect(song.reload.published_at).to_not be_nil
+    expect(song.reload.published_on).to_not be_nil
   end
 end

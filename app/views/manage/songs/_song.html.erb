@@ -1,6 +1,6 @@
 <%= content_tag("li") do %>
   <%= link_to edit_song_path(song) do %>
-    <% if song.published_at.nil? %>
+    <% if song.published_on.nil? %>
       <%= check_box_tag "ids[]", song.id, false, class: "publish", id: nil %>
     <% end %>
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150220014314) do
+ActiveRecord::Schema.define(version: 20150226010217) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -20,9 +20,9 @@ ActiveRecord::Schema.define(version: 20150220014314) do
     t.json     "data",         null: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.datetime "published_at"
+    t.date     "published_on"
   end
 
-  add_index "songs", ["published_at"], name: "index_songs_on_published_at", using: :btree
+  add_index "songs", ["published_on"], name: "index_songs_on_published_on", order: {"published_on"=>:desc}, using: :btree
 
 end

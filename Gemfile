@@ -1,6 +1,7 @@
 ruby   "2.1.5"
 source "https://rubygems.org"
 
+gem "assorted",   "0.0.3"
 gem "bourbon",    "4.2.0"
 gem "ejs",        "1.1.1"
 gem "oj",         "2.11.4"

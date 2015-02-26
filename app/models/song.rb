@@ -6,8 +6,8 @@ class Song < ActiveRecord::Base
     purchase_type purchase_url
   ).freeze
 
-  scope :published,   -> { where("published_at IS NOT NULL").order("published_at DESC") }
-  scope :unpublished, -> { where("published_at IS NULL").order("id ASC") }
+  scope :published,   -> { where("published_on IS NOT NULL").desc(:published_on) }
+  scope :unpublished, -> { where("published_on IS NULL").asc(:id) }
 
   validates :data,          presence: true
   validates :remote_id,     presence: true, numericality: { only_integer: true }
@@ -51,11 +51,7 @@ class Song < ActiveRecord::Base
   end
 
   def publish!
-    update!(published_at: Time.now)
-  end
-
-  def published_on
-    published_at.to_date
+    update!(published_on: Date.today)
   end
 
   def update_from_remote(remote)

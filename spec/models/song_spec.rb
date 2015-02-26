@@ -102,8 +102,8 @@ describe Song, ".publish!" do
   it "publishes the songs" do
     subject.publish!(song_1.id, song_2.id)
 
-    expect(song_1.reload.published_at).to_not be_nil
-    expect(song_2.reload.published_at).to_not be_nil
+    expect(song_1.reload.published_on).to_not be_nil
+    expect(song_2.reload.published_on).to_not be_nil
   end
 
   it "publishes the songs in a transaction" do
@@ -111,14 +111,8 @@ describe Song, ".publish!" do
       subject.publish!(song_1.id, invalid_song.id)
     }.to raise_error(ActiveRecord::RecordInvalid)
 
-    expect(song_1.reload.published_at).to be_nil
-    expect(invalid_song.reload.published_at).to be_nil
-  end
-
-  it "does not publish songs as the exact same time" do
-    subject.publish!(song_1.id, song_2.id)
-
-    expect(song_1.reload.published_at).to_not eq(song_2.reload.published_at)
+    expect(song_1.reload.published_on).to be_nil
+    expect(invalid_song.reload.published_on).to be_nil
   end
 end
 
@@ -158,7 +152,7 @@ describe Song, "#publish!" do
   it "publishes the song" do
     subject.publish!
 
-    expect(subject.reload.published_at).to_not be_nil
+    expect(subject.reload.published_on).to_not be_nil
   end
 
   it "raises if record is invalid" do
@@ -167,14 +161,6 @@ describe Song, "#publish!" do
     expect {
       subject.publish!
     }.to raise_error(ActiveRecord::RecordInvalid)
-  end
-end
-
-describe Song, "#published_on" do
-  subject { create(:song, :published) }
-
-  it "returns creation time as a date" do
-    expect(subject.published_on).to eq(subject.published_at.to_date)
   end
 end
 

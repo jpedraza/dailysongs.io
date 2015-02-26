@@ -3,7 +3,7 @@ FactoryGirl.define do
     data { build(:local_song) }
 
     trait :published do
-      published_at { Time.now }
+      published_on { Date.today }
     end
   end
 
