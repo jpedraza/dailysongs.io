@@ -1,8 +1,12 @@
 var Songs = {
-  checked: 0,
+  checked  : 0,
+  elements : {
+    form       : document.querySelector("form"),
+    publish    : document.querySelector("a.publish"),
+    checkboxes : Array.prototype.slice.call(document.querySelectorAll("input.publish"))
+  },
 
   initialize: function() {
-    this.findElements();
     this.bindEventListeners();
   },
 
@@ -13,14 +17,6 @@ var Songs = {
     this.elements.checkboxes.forEach(function(checkbox) {
       checkbox.addEventListener("change", onChange, false);
     });
-  },
-
-  findElements: function() {
-    this.elements = {
-      form       : document.querySelector("form"),
-      publish    : document.querySelector("a.publish"),
-      checkboxes : Array.prototype.slice.call(document.querySelectorAll("input.publish"))
-    }
   },
 
   onPublish: function(event) {
