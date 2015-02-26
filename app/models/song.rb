@@ -6,6 +6,8 @@ class Song < ActiveRecord::Base
     purchase_type purchase_url
   ).freeze
 
+  store_accessor :data, *LOCAL_ATTRIBUTES
+
   scope :published,   -> { where("published_on IS NOT NULL").desc(:published_on) }
   scope :unpublished, -> { where("published_on IS NULL").asc(:id) }
 
@@ -35,18 +37,6 @@ class Song < ActiveRecord::Base
   def self.publish!(*ids)
     transaction do
       Song.where(id: ids).each(&:publish!)
-    end
-  end
-
-  LOCAL_ATTRIBUTES.each do |attribute|
-    define_method("#{attribute}") do
-      self.data ||= {}
-      self.data[attribute]
-    end
-
-    define_method("#{attribute}=") do |value|
-      self.data ||= {}
-      self.data[attribute] = value
     end
   end
 
