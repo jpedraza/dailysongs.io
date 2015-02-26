@@ -24,16 +24,22 @@ var Songs = {
   },
 
   onClick: function(event) {
-    var target = event.target;
+    var target = event.target,
         id     = target && target.getAttribute("data-remote-id");
 
-    if (!id) {
-      return;
+    event.preventDefault();
+
+    while (!id) {
+      target = target.parentNode;
+
+      if (!target || !target.getAttribute) {
+        return;
+      }
+
+      id = target.getAttribute("data-remote-id");
     }
 
     Player.play(target.dataset);
-
-    event.preventDefault();
   },
 
   onPause: function(event) {
