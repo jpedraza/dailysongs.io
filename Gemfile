@@ -2,21 +2,21 @@ ruby   "2.1.5"
 source "https://rubygems.org"
 
 gem "assorted",   "0.0.3"
-gem "bourbon",    "4.2.1"
+gem "bourbon",    "4.2.3"
 gem "ejs",        "1.1.1"
-gem "oj",         "2.12.1"
-gem "pg",         "0.18.1"
+gem "oj",         "2.12.8"
+gem "pg",         "0.18.2"
 gem "rails",      "4.2.1"
 gem "soundcloud", "0.3.2"
 gem "uglifier",   "2.7.1"
-gem "unicorn",    "4.8.3"
+gem "unicorn",    "4.9.0"
 
 group :production do
   gem "rails_12factor", "0.0.3"
 end
 
 group :development, :test do
-  gem "dotenv-rails", "2.0.0"
+  gem "dotenv-rails", "2.0.1"
   gem "rspec-rails",  "3.2.1"
 end
 
