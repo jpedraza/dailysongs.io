@@ -1,19 +1,5 @@
 <section id="content">
-  <% @groups.each do |date, songs| %>
-    <section class="group">
-      <h1>
-        <%= date_to_weekday(date) %>
-
-        <time datetime="<%= date %>">
-          <%= date.to_s(:ordinalized) %>
-        </time>
-      </h1>
-
-      <ul>
-        <%= render songs %>
-      </ul>
-    </section>
-  <% end %>
+  <%= render "groups", groups: @songs.group_by(&:published_on) %>
 </section>
 
 <% content_for :javascript do %>

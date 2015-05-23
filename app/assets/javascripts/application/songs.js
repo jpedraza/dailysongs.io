@@ -1,5 +1,8 @@
 var Songs = {
-  paths: {
+  elements : {
+    content: document.querySelector("#content")
+  },
+  paths : {
     play  : "M4 4 L28 16 L4 28 z",
     pause : "M4 4 H12 V28 H4 z M20 4 H28 V28 H20 z"
   },
@@ -9,10 +12,11 @@ var Songs = {
   },
 
   bindEventListeners: function() {
-    document.addEventListener("click", this.onClick.bind(this), false);
-    document.addEventListener("pause", this.onPause.bind(this), false);
-    document.addEventListener("play",  this.onPlay.bind(this),  false);
-    document.addEventListener("stop",  this.onStop.bind(this),  false);
+    document.addEventListener("click",  this.onClick.bind(this),  false);
+    document.addEventListener("pause",  this.onPause.bind(this),  false);
+    document.addEventListener("play",   this.onPlay.bind(this),   false);
+    document.addEventListener("scroll", this.onScroll.bind(this), false);
+    document.addEventListener("stop",   this.onStop.bind(this),   false);
   },
 
   setState: function(id, state, active) {
@@ -48,6 +52,48 @@ var Songs = {
 
   onPlay: function(event) {
     this.setState(event.detail.id, "pause", true);
+  },
+
+  onScroll: function(event) {
+    var remaining = document.body.scrollHeight - window.innerHeight -
+                      window.pageYOffset;
+
+    if (remaining > 128 || this.loading) {
+      return;
+    }
+
+    this.loading = true;
+
+    document.removeEventListener("scroll", this.onScroll);
+
+    var element = this.elements.content.querySelector(".group:last-child li:last-child"),
+        url     = "/?date=" + element.dataset.publishedOn,
+        request = new XMLHttpRequest();
+
+    request.open("GET", url);
+    request.setRequestHeader("Accept", "text/javascript");
+    request.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+    request.onreadystatechange = this.onScrollLoad.bind(this);
+    request.send();
+  },
+
+  onScrollLoad: function(event) {
+    var request = event.srcElement;
+
+    if (request.readyState != 4) {
+      return;
+    }
+
+    var html = request.responseText.trim();
+
+    if (!html) {
+      return;
+    }
+
+    this.loading = false;
+    this.elements.content.innerHTML += html;
+
+    document.addEventListener("scroll", this.onScroll.bind(this), false);
   },
 
   onStop: function(event) {

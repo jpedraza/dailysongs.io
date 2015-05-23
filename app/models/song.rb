@@ -1,5 +1,6 @@
 class Song < ActiveRecord::Base
   PURCHASE_TYPES    = %w(album song).freeze
+  GROUPS_PER_PAGE   = 5
   REMOTE_ATTRIBUTES = %w(id title duration artwork_url permalink_url).freeze
   LOCAL_ATTRIBUTES  = %w(
     remote_id artist title duration artwork_url permalink_url
@@ -8,9 +9,10 @@ class Song < ActiveRecord::Base
 
   store_accessor :data, *LOCAL_ATTRIBUTES
 
-  scope :published,        -> { where("published_on IS NOT NULL").desc(:published_on) }
-  scope :unpublished,      -> { where("published_on IS NULL").asc(:id) }
-  scope :published_before, -> (date) { where("published_on <= ?", date) }
+  scope :published,              -> { where("published_on IS NOT NULL").desc(:published_on) }
+  scope :published_before,       -> (date) { where("published_on < ?", date) }
+  scope :published_on_or_before, -> (date) { where("published_on <= ?", date) }
+  scope :unpublished,            -> { where("published_on IS NULL").asc(:id) }
 
   validates :data,          presence: true
   validates :remote_id,     presence: true, numericality: { only_integer: true }
@@ -33,6 +35,13 @@ class Song < ActiveRecord::Base
       song.update_from_remote(remote)
     end
   rescue SoundCloud::ResponseError
+  end
+
+  def self.paginate(options = {})
+    limit = options[:per_page] || GROUPS_PER_PAGE
+    dates = distinct.published.limit(options[:per_page]).pluck(:published_on)
+
+    unscoped.where(published_on: dates).desc(:published_on)
   end
 
   def self.publish!(*ids)

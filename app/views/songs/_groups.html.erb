@@ -1,0 +1,23 @@
+<% groups.each do |date, songs| %>
+  <section class="group">
+    <h1>
+      <%= date_to_weekday(date) %>
+
+      <time datetime="<%= date %>">
+        <%= date.to_s(:ordinalized) %>
+      </time>
+    </h1>
+
+    <ul>
+      <% songs.each do |song| %>
+        <%= content_tag("li", data: { published_on: song.published_on.to_s }.merge(song.data)) do %>
+          <svg class="play" viewBox="0 0 32 32">
+            <path d="M4 4 L28 16 L4 28 z"></path>
+          </svg>
+
+          <%= song.title %> <span class="byline">by <%= song.artist %></span>
+        <% end %>
+      <% end %>
+    </ul>
+  </section>
+<% end %>

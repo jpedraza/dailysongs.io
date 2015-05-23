@@ -87,6 +87,18 @@ describe Song, ".build_from_remote" do
   end
 end
 
+describe Song, ".paginate" do
+  subject { Song }
+
+  let!(:today)     { create_list(:song, 2, published_on: Date.today) }
+  let!(:yesterday) { create_list(:song, 2, published_on: 1.day.ago) }
+  let!(:last_week) { create_list(:song, 2, published_on: 1.week.ago) }
+
+  it "paginates by publish dates" do
+    expect(Song.paginate(per_page: 2).count).to eq(4)
+  end
+end
+
 describe Song, ".publish!" do
   subject { Song }
 
@@ -138,8 +150,22 @@ describe Song, ".published_before" do
   let!(:song_2) { create(:song, published_on: Date.today - 1.day) }
   let!(:song_3) { create(:song, published_on: Date.today - 2.days) }
 
-  it "only includes songs published on or before the provided date" do
+  it "only includes songs published before the provided date" do
     expect(subject.published_before(song_2.published_on)).to eq([
+      song_3
+    ])
+  end
+end
+
+describe Song, ".published_on_or_before" do
+  subject { Song }
+
+  let!(:song_1) { create(:song, published_on: Date.today) }
+  let!(:song_2) { create(:song, published_on: Date.today - 1.day) }
+  let!(:song_3) { create(:song, published_on: Date.today - 2.days) }
+
+  it "only includes songs published on or before the provided date" do
+    expect(subject.published_on_or_before(song_2.published_on)).to eq([
       song_2, song_3
     ])
   end
