@@ -70,20 +70,6 @@ Player.prototype = {
     }.bind(this));
   },
 
-  playNext: function() {
-    var all     = Array.prototype.slice.call(document.querySelectorAll("[data-remote-id]")),
-        current = document.querySelector("[data-remote-id='" + (this.data ? this.data.remoteId : 0) + "']"),
-        next    = all[all.indexOf(current) + 1];
-
-    if (next) {
-      this.play(next.dataset);
-    } else {
-      this.state = null;
-      this.stop();
-      this.render();
-    }
-  },
-
   render: function() {
     var element = this.elements.player;
 
@@ -129,7 +115,17 @@ Player.prototype = {
   },
 
   onFinish: function() {
-    this.playNext();
+    var all     = Array.prototype.slice.call(document.querySelectorAll("[data-remote-id]")),
+        current = document.querySelector("[data-remote-id='" + (this.data ? this.data.remoteId : 0) + "']"),
+        next    = all[all.indexOf(current) + 1];
+
+    if (next) {
+      this.play(next.dataset);
+    } else {
+      this.state = null;
+      this.stop();
+      this.render();
+    }
   },
 
   onKeyDown: function(event) {
@@ -137,10 +133,13 @@ Player.prototype = {
 
     switch (event.which) {
       case 32: // Space
-        if (instance) {
+        var data    = this.data,
+            dataset = document.querySelector(".selected").dataset;
+
+        if (data && data.remoteId == dataset.remoteId) {
           this.toggle();
         } else {
-          this.playNext();
+          this.play(dataset);
         }
 
         event.preventDefault();

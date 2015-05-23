@@ -5,15 +5,20 @@
 <% content_for :javascript do %>
   <%= javascript_include_tag "application" %>
 
-  <% if @song.present? %>
-    <script>
-      (function() {
-        var element = document.querySelector("[data-remote-id='<%== @song.remote_id %>']");
+  <script>
+    (function() {
+      var element;
+
+      <% if @song.present? %>
+        element = document.querySelector("[data-remote-id='<%== @song.remote_id %>']");
 
         if (element) {
           Player.play(element.dataset);
         }
-      })();
-    </script>
-  <% end %>
+      <% end %>
+
+      element = element || document.querySelector("#content [data-remote-id]");
+      element.classList.add("selected");
+    })();
+  </script>
 <% end %>

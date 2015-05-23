@@ -12,11 +12,39 @@ var Songs = {
   },
 
   bindEventListeners: function() {
-    document.addEventListener("click",  this.onClick.bind(this),  false);
-    document.addEventListener("pause",  this.onPause.bind(this),  false);
-    document.addEventListener("play",   this.onPlay.bind(this),   false);
-    document.addEventListener("scroll", this.onScroll.bind(this), false);
-    document.addEventListener("stop",   this.onStop.bind(this),   false);
+    document.addEventListener("click",   this.onClick.bind(this),   false);
+    document.addEventListener("keydown", this.onKeyDown.bind(this), false);
+    document.addEventListener("pause",   this.onPause.bind(this),   false);
+    document.addEventListener("play",    this.onPlay.bind(this),    false);
+    document.addEventListener("scroll",  this.onScroll.bind(this),  false);
+    document.addEventListener("stop",    this.onStop.bind(this),    false);
+  },
+
+  setPosition: function(offset) {
+    var content  = document.querySelector("#content"),
+        all      = Array.prototype.slice.call(content.querySelectorAll("[data-remote-id]")),
+        current  = content.querySelector(".selected"),
+        next     = all[all.indexOf(current) + offset];
+
+    if (!next) {
+      return;
+    }
+
+    if (current) {
+      current.classList.remove("selected");
+    }
+
+    next.classList.add("selected");
+
+    var height    = window.innerHeight,
+        padding   = 64,
+        rectangle = next.getBoundingClientRect();
+
+    if (rectangle.bottom + padding > height) {
+      window.scrollBy(0, rectangle.bottom - height + padding);
+    } else if (rectangle.top - padding < 0) {
+      window.scrollBy(0, rectangle.top - padding);
+    }
   },
 
   setState: function(id, state, active) {
@@ -25,6 +53,7 @@ var Songs = {
 
     path.setAttribute("d", this.paths[state]);
     element.classList[active ? "add" : "remove"]("active");
+    element.classList[active ? "add" : "remove"]("selected");
   },
 
   onClick: function(event) {
@@ -44,6 +73,22 @@ var Songs = {
     Player.play(target.dataset);
 
     event.preventDefault();
+  },
+
+  onKeyDown: function(event) {
+    switch (event.which) {
+      case 74: // J
+        this.setPosition(1);
+
+        event.preventDefault();
+      break;
+
+      case 75: // K
+        this.setPosition(-1);
+
+        event.preventDefault();
+      break;
+    }
   },
 
   onPause: function(event) {

@@ -144,9 +144,12 @@ a {
         text-overflow: ellipsis;
         cursor: pointer;
 
-        &:hover,
-        &.active {
+        &.selected {
           background: lighten($text-bright, 45%);
+        }
+
+        &:hover {
+          background: #FFE;
         }
 
         &:last-child {

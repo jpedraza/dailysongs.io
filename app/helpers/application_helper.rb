@@ -3,6 +3,7 @@ module ApplicationHelper
    "Use the progress bar to seek.",
    "Use <kbd>M</kbd> to mute or unmute.",
    "Use <kbd>space</kbd> to pause and play.",
+   "Use <kbd>J</kbd> and <kbd>K</kbd> to navigate songs.",
    "Use <kbd>up</kbd> and <kbd>down</kbd> to adjust the volume."
   ].freeze
 
