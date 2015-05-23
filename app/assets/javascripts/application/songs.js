@@ -27,8 +27,6 @@ var Songs = {
     var target = event.target,
         id     = target && target.getAttribute("data-remote-id");
 
-    event.preventDefault();
-
     while (!id) {
       target = target.parentNode;
 
@@ -40,6 +38,8 @@ var Songs = {
     }
 
     Player.play(target.dataset);
+
+    event.preventDefault();
   },
 
   onPause: function(event) {
