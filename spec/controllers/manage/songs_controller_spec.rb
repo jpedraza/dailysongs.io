@@ -117,6 +117,22 @@ describe Manage::SongsController, "#update, when invalid" do
   end
 end
 
+describe Manage::SongsController, "#destroy, when valid" do
+  let(:song) { create(:song) }
+
+  before do
+    delete :destroy, id: song.id
+  end
+
+  it { should respond_with(200) }
+
+  it "deletes the song" do
+    expect {
+      song.reload
+    }.to raise_error(ActiveRecord::RecordNotFound)
+  end
+end
+
 describe Manage::SongsController, "#publish" do
   let(:song) { create(:song) }
 

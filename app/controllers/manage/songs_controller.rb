@@ -32,6 +32,13 @@ class Manage::SongsController < ManageController
     end
   end
 
+  def destroy
+    song = Song.find(params[:id])
+    song.destroy
+
+    head :ok
+  end
+
   def publish
     Song.publish!(*params[:ids])
 

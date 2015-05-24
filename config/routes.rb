@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   constraints(subdomain: "manage") do
-    resources :songs, only: [:new, :create, :edit, :update], controller: "manage/songs" do
+    resources :songs, only: [:new, :create, :edit, :update, :destroy], controller: "manage/songs" do
       collection do
         put :publish
       end

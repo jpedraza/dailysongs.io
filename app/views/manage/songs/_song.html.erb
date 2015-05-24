@@ -7,5 +7,9 @@
 
   <ul>
     <li><%= link_to "Edit", edit_song_path(song) %></li>
+
+    <% if song.published_on.nil? %>
+      <li><%= link_to "Delete", song_path(song), class: "delete" %></li>
+    <% end %>
   </ul>
 <% end %>
