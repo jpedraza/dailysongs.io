@@ -1,9 +1,11 @@
 <%= content_tag("li") do %>
-  <%= link_to edit_song_path(song) do %>
-    <% if song.published_on.nil? %>
-      <%= check_box_tag "ids[]", song.id, false, class: "publish", id: nil %>
-    <% end %>
-
-    <%= song.title %> <span class="byline">by <%= song.artist %></span>
+  <% if song.published_on.nil? %>
+    <%= check_box_tag "ids[]", song.id, false, class: "publish", id: nil %>
   <% end %>
+
+  <%= song.title %> <span class="byline">by <%= song.artist %></span>
+
+  <ul>
+    <li><%= link_to "Edit", edit_song_path(song) %></li>
+  </ul>
 <% end %>

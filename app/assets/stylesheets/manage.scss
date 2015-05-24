@@ -58,17 +58,38 @@ body {
   .group {
     ul {
       li {
-        padding: 0;
+        cursor: default;
 
-        a,
         &.empty {
           color: darken($text, 25%);
           padding: $padding;
           display: block;
         }
 
+        &:hover,
+        li:hover {
+          background: transparent;
+        }
+
         input {
-          margin: 0 8px 0 0;
+          margin: 0 $padding 0 0;
+        }
+
+        ul {
+          border: 0;
+          float: right;
+
+          li {
+            margin: 0 0 0 $padding;
+            padding: 0;
+            border: 0;
+            float: left;
+
+            a {
+              color: $text-bright;
+              font-size: 16px;
+            }
+          }
         }
       }
     }
