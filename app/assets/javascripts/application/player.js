@@ -190,10 +190,11 @@ Player.prototype = {
     this.interval = setInterval(this.onProgress.bind(this), 500);
   },
 
-  onProgress: function() {
+  onProgress: function(position) {
+    position = position || Math.round(this.instance.pos());
+
     var elements   = this.elements,
         duration   = this.data.duration,
-        position   = Math.round(this.instance.pos()),
         remaining  = duration - position,
         percentage = (position / duration) * 100;
 
@@ -226,6 +227,7 @@ Player.prototype = {
         position = this.data.duration * offset;
 
     this.instance.pos(position);
+    this.onProgress(position);
   }
 };
 
