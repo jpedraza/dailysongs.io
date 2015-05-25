@@ -12,10 +12,12 @@ Player.prototype = {
   },
 
   bindEventListeners: function() {
-    document.addEventListener("keydown", this.onKeyDown.bind(this), false);
+    var element = this.elements.player;
 
-    this.elements.player.addEventListener("click", this.onSeek.bind(this), false);
-    this.elements.player.addEventListener("click", this.onPurchase.bind(this), false);
+    element.addEventListener("click", this.onSeek.bind(this), false);
+    element.addEventListener("click", this.onPurchase.bind(this), false);
+
+    document.addEventListener("keydown", this.onKeyDown.bind(this), false);
   },
 
   dispatch: function(name, id) {
@@ -28,9 +30,9 @@ Player.prototype = {
     document.dispatchEvent(event);
   },
 
-  formatTime: function(seconds) {
-    var minutes = Math.floor(seconds / 60),
-        seconds = Math.round(seconds % 60);
+  formatTime: function(time) {
+    var minutes = Math.floor(time / 60),
+        seconds = Math.round(time % 60);
 
     if (seconds < 10) {
       seconds = "0" + seconds;
@@ -52,7 +54,7 @@ Player.prototype = {
   },
 
   play: function(data) {
-    if (this.data && this.data.remoteId == data.remoteId) {
+    if (this.data && this.data.remoteId === data.remoteId) {
       this.toggle();
 
       return;
@@ -136,7 +138,7 @@ Player.prototype = {
         var data    = this.data,
             dataset = document.querySelector(".selected").dataset;
 
-        if (data && data.remoteId == dataset.remoteId) {
+        if (data && data.remoteId === dataset.remoteId) {
           this.toggle();
         } else {
           this.play(dataset);
@@ -151,7 +153,7 @@ Player.prototype = {
           break;
         }
 
-        if (event.which == 38) {
+        if (event.which === 38) {
           this.volume = Math.min(1.0, this.volume += 0.1);
         } else {
           this.volume = Math.max(0.1, this.volume -= 0.1);
@@ -203,7 +205,7 @@ Player.prototype = {
   onPurchase: function(event) {
     var target = event.srcElement;
 
-    if (target.nodeName != "A" || target.parentNode.className != "purchase") {
+    if (target.nodeName !== "A" || target.parentNode.className !== "purchase") {
       return;
     }
 
@@ -216,7 +218,7 @@ Player.prototype = {
     var bar    = this.elements.bar,
         target = event.srcElement;
 
-    if (!this.instance || !bar || target != bar && target != bar.parentNode) {
+    if (!this.instance || !bar || target !== bar && target !== bar.parentNode) {
       return;
     }
 

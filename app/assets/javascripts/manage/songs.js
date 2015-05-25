@@ -55,7 +55,7 @@ var Songs = {
     request.open("DELETE", url);
     request.setRequestHeader("X-CSRF-Token", token);
     request.onreadystatechange = function() {
-      if (request.readyState != 4 || request.status != 200) {
+      if (request.readyState !== 4 || request.status !== 200) {
         return;
       }
 
@@ -64,7 +64,7 @@ var Songs = {
 
       item.remove();
 
-      if (list.querySelectorAll("li").length == 0) {
+      if (list.querySelectorAll("li").length === 0) {
         list.parentNode.parentNode.remove();
       }
     };

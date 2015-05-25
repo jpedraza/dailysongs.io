@@ -125,7 +125,7 @@ var Songs = {
   onScrollLoad: function(event) {
     var request = event.srcElement;
 
-    if (request.readyState != 4) {
+    if (request.readyState !== 4) {
       return;
     }
 
