@@ -34,9 +34,9 @@ var Songs = {
     }
 
     if (this.checked > 0) {
-      publish.classList.add("enabled");
+      publish.classList.remove("disabled");
     } else {
-      publish.classList.remove("enabled");
+      publish.classList.add("disabled");
     }
   },
 

@@ -23,11 +23,11 @@ body {
     display: inline;
 
     .publish {
-      color: $text-dull;
+      color: $text-bright;
       float: right;
 
-      &.enabled {
-        color: $text-bright;
+      &.disabled {
+        color: $text-dull;
       }
     }
 
